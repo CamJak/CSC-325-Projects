@@ -1,3 +1,9 @@
+###################################################################################
+# CSC-325 Program 0
+# Practice program to create a linked list in python and sort using selection sort
+# Written by Cameron Thomas
+###################################################################################
+
 from classes import linkedList
 
 # Request number of nodes from user
