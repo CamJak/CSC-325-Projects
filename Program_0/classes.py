@@ -1,4 +1,4 @@
-from random import randint
+## File to hold the Node and LinkedList classes
 
 # Simple node class
 class node:
@@ -27,19 +27,11 @@ class node:
 
 # Linked list class
 class linkedList:
-    def __init__(self, num_nodes) -> None:
-        self.length = num_nodes
-        self.head = node(randint(0,100))
-        self.prev = self.head
-
-        # Generate linked list
-        # Data is a random number from 0 to 100
-        for i in range(num_nodes-1):
-            newNode = node(randint(0,100))
-            self.prev.link = newNode
-            self.prev = newNode
-
-        self.tail = self.prev
+    # Initialize linked list with head data
+    def __init__(self, headData) -> None:
+        self.length = 1
+        self.head = node(headData)
+        self.tail = self.head
 
     # Returns string version of linked list
     def __str__(self) -> str:
@@ -49,6 +41,13 @@ class linkedList:
             str_out = str_out + str(currNode.data) + " "
             currNode = currNode.link
         return str_out
+    
+    # Function to append new nodes
+    def append(self, data) -> None:
+        newNode = node(data)
+        self.tail.link = newNode
+        self.tail = newNode
+        self.length += 1
     
     # Function to return first node containing matching data
     def find(self, currNode, data) -> node:
