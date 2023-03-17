@@ -1,2 +1,5 @@
 # ignore python cache file
 *\__pycache__
+
+# ignore my class notes
+*\ClassNotes
