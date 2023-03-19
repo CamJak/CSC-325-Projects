@@ -2,4 +2,7 @@
 *\__pycache__
 
 # ignore my class notes
-*\ClassNotes
+*ClassNotes
+
+# ignore homework pages
+*Exercises
