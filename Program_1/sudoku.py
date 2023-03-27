@@ -52,19 +52,30 @@ def rule1(group):
   # value from the duplicate set. In this case the values of the duplicate 
   # set may be removed from all the other sets in the group. 
 
-  # check each combination of cells in group
+  # go through each cell in the group (primary cell)
   for pInx in range(9):
+    # initialize a list of dupliates for the primary cell
     duplicates = []
+    # go through every cell in the group again (secondary cell)
     for sInx in range(9):
+      # if the primary and secondary cells are equal
       if group[sInx].issuperset(group[pInx]) and (len(group[sInx]) == len(group[pInx])):
+        # add secondary cell to duplicates list
         duplicates.append(sInx)
+    # if the number of duplicates is equal to the cardinality of the primary cell
     if cardinality(group[pInx]) == len(duplicates):
+      # go through every cell in the group again (tertiary cell)
       for tInx in range(9):
+        # if the tertiary cell is in the duplicates list, skip it
         if tInx in duplicates:
           continue
+        # otherwise...
         else:
+          # create a copy of tertiary cell
           old = HashSet(group[tInx])
+          # remove all primary elements from the tertiary cell
           group[tInx].difference_update(group[pInx])
+          # check if tertiary cell has changed and return true if so
           if not (group[tInx].issuperset(old) and (len(group[tInx]) == len(old))):
             changed = True
 
@@ -77,15 +88,22 @@ def rule2(group):
   # RULE 2 - Reduce set size by throwing away elements that appear in other
   # sets in the group
 
+  # go through every cell in the group (primary cell)
   for pInx in range(9):
+    # skip this rule if the cardinality of primary cell is 1
     if cardinality(group[pInx]) > 1:
+      # create a temporary copy of primary cell
       temp = HashSet(group[pInx])
+      # go through every other cell in the list (secondary cell)
       for sInx in range(9):
         if pInx == sInx:
           continue
         else:
+          # remove all secondary elements from the temporary cell
           temp.difference_update(group[sInx])
+      # if the temporary cell ends up only containing one element
       if cardinality(temp) == 1:
+        # set the primary cell equal to the temporary cell and return true
         group[pInx].clear()
         group[pInx].update(temp)
         changed = True
