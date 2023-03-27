@@ -1,7 +1,7 @@
 # Provide your information as the values of these variables:
-myName = 'first_name, last_name'
-myTechID = '0000000'
-myTechEmail = 'abc123' #only your email id omit @latech.edu
+myName = 'Cameron, Thomas'
+myTechID = '10382168'
+myTechEmail = 'cjt025' #only your email id omit @latech.edu
 ###########################################################
 
 import sys
@@ -52,18 +52,21 @@ def rule1(group):
   # value from the duplicate set. In this case the values of the duplicate 
   # set may be removed from all the other sets in the group. 
 
-  
-  # go through all the elements of the group which are alredy sorted from
-  # smallest to largest cardinality
-
-  # get the cardinality of the set       
-
-  # if there are cardinality sets with cardinality elements then the other
-  # sets can't have any of these values in them since these sets will have
-  # to each have one of the cardinality values 
-
-  # go through the sets and for each set different from the given set take
-  # out all the elements that are in given set
+  # check each combination of cells in group
+  for pInx in range(9):
+    duplicates = []
+    for sInx in range(9):
+      if group[sInx].issuperset(group[pInx]) and (len(group[sInx]) == len(group[pInx])):
+        duplicates.append(sInx)
+    if cardinality(group[pInx]) == len(duplicates):
+      for tInx in range(9):
+        if tInx in duplicates:
+          continue
+        else:
+          old = HashSet(group[tInx])
+          group[tInx].difference_update(group[pInx])
+          if not (group[tInx].issuperset(old) and (len(group[tInx]) == len(old))):
+            changed = True
 
   return changed
   
@@ -74,18 +77,18 @@ def rule2(group):
   # RULE 2 - Reduce set size by throwing away elements that appear in other
   # sets in the group
 
-
-  # pick an element of the group
-
-  # for all the other elements of the group remove the elements that appear
-  # in other elements of the group. These can be satisfied by other elements
-  # of the group
-
-  # When done, if there is one value left then it can only be satisfied by
-  # this cell. This is a most constrained rule. If end up with 0 elements,
-  # then not enough information yet to constrain this choice. If didn't
-  # improve the situation at all, let's continue looking at other elements
-  # in the row. 
+  for pInx in range(9):
+    if cardinality(group[pInx]) > 1:
+      temp = HashSet(group[pInx])
+      for sInx in range(9):
+        if pInx == sInx:
+          continue
+        else:
+          temp.difference_update(group[sInx])
+      if cardinality(temp) == 1:
+        group[pInx].clear()
+        group[pInx].update(temp)
+        changed = True
 
   return changed
 
@@ -144,7 +147,7 @@ def main():
   print("Solving this puzzle:")
   printMatrix(matrix)
 
-  reduce(matrix)  
+  reduce(matrix)
 
   print()
   print("Solution:")
