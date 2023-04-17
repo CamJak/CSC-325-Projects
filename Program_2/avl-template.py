@@ -13,7 +13,7 @@ class AVLTree:
 
         def getBalance(self):
             return self.balance
-        def setBalance(self):
+        def setBalance(self, balance):
             self.balance = balance
         def __repr__(self):
             return f"AVLNode({repr(self.item)}, balance = {repr(self.balance)}, left = {repr(self.left)}, right = {repr(self.right)})"
@@ -33,7 +33,19 @@ class AVLTree:
             # trivial case
             if self == None:
                 return
-            ### WRITE YOUR CODE HERE ###
+
+            # if no children - print item
+            if self.left == None and self.right == None:
+                print(self.item, end=' ')
+            
+            else:
+                # if left child - go left
+                if self.left != None:
+                    self.left._getLeaves()
+
+                # if right child - go right
+                if self.right != None:
+                    self.right._getLeaves()
                        
     def insert(self, item):
 
@@ -44,7 +56,8 @@ class AVLTree:
             # get pivot's left child node (bad child)
             leftChild = pivot.left
 
-            ### WRITE YOUR CODE HERE ###
+            pivot.left = leftChild.right
+            leftChild.right = pivot
             
             # return bad child
             return leftChild
@@ -56,7 +69,8 @@ class AVLTree:
             # get pivot's right child node (bad child)
             rightChild = pivot.right
 
-            ### WRITE YOUR CODE HERE ###
+            pivot.right = rightChild.left
+            rightChild.left = pivot
             
             # return bad child
             return rightChild
@@ -72,7 +86,22 @@ class AVLTree:
                 root.left = __insert(root.left, item)
 
                 # handle Case 1 & Case 2 with no rotations
-                ### WRITE YOUR CODE HERE ###
+                # updating the balances
+
+                # case 1
+                if root.getBalance() == 0:
+                    if not self.pivotFound:
+                        # update balance
+                        root.setBalance(root.getBalance() - 1)
+
+                # case 2
+                elif root.getBalance() != 0:
+                    # if pivot has not been found yet
+                    if not self.pivotFound:
+                        # first node found is pivot
+                        self.pivotFound = True
+                        root.setBalance(root.getBalance() - 1)
+
 
                 # check for Case 3 when AVL is unbalanced
                 if root.getBalance() == -2:
@@ -80,23 +109,42 @@ class AVLTree:
                     badChild = root.left
 
                     # Subcase A - Single Rotation
-                    ### WRITE YOUR CODE HERE ###
+                    # rotate right
+                    if item < badChild.item:
+                        root = rotateRight(root)
+                        
+                        # update balances
+                        root.setBalance(0)
+                        root.right.setBalance(0)
                         
                     # Subcase B - Double Rotation
-                    ### WRITE YOUR CODE HERE ###
+                    elif item > badChild.item:
+                        # get bad grandchild
+                        badGrandChild = badChild.right
+
+                        # rotate left on bad child
+                        root.left = rotateLeft(root.left)
+                        # rotate right on pivot
+                        root = rotateRight(root)
 
                         # adjusting balances of pivot and bad child based on bad grandchild
                         # if value inserted at badGrandChild
                         # then pivot balance = 0, bad child balance = 0
-                        ### WRITE YOUR CODE HERE ###
+                        if item == badGrandChild.item:
+                            root.setBalance(0)
+                            badChild.setBalance(0)
 
                         # if inserted value smaller than bad grandchild (left subtree)
                         # then pivot balance = 1, bad child balance = 0
-                        ### WRITE YOUR CODE HERE ###
+                        elif item < badGrandChild.item:
+                            root.setBalance(1)
+                            badChild.setBalance(0)
                         
                         # if inserted value larger than bad grandchild (right subtree)
                         # then pivot balance = 0, bad child = -1
-                        ### WRITE YOUR CODE HERE ###
+                        else:
+                            root.setBalance(0)
+                            badChild.setBalance(-1)
 
             # item to be inserted is larger than root
             # inserting into right subtree with specific rules to handle
@@ -104,7 +152,21 @@ class AVLTree:
                 root.right = __insert(root.right, item)
 
                 # handle Case 1 & Case 2 with no rotations
-                ### WRITE YOUR CODE HERE ###
+                # updating the balances
+
+                # case 1
+                if root.getBalance() == 0:
+                    if not self.pivotFound:
+                        # update balance
+                        root.setBalance(root.getBalance() + 1)
+
+                # case 2
+                elif root.getBalance() != 0:
+                    # if pivot has not been found yet
+                    if not self.pivotFound:
+                        # first node found is pivot
+                        self.pivotFound = True
+                        root.setBalance(root.getBalance() + 1)
                     
                 # check for Case 3 when AVL is unbalanced
                 if root.getBalance() == 2:
@@ -112,24 +174,42 @@ class AVLTree:
                     badChild = root.right
 
                     # Subcase A - Single Rotation
-                    ### WRITE YOUR CODE HERE ###
+                    # rotate right
+                    if item > badChild.item:
+                        root = rotateLeft(root)
+
+                        # update balances
+                        root.setBalance(0)
+                        root.left.setBalance(0)
 
                     # Subcase B - Double Rotation
-                    ### WRITE YOUR CODE HERE ###
+                    elif item < badChild.item:
+                        # get bad grandchild
+                        badGrandChild = badChild.left
+
+                        # rotate right on bad child
+                        root.right = rotateRight(root.right)
+                        # rotate left on pivot
+                        root = rotateLeft(root)
 
                         # adjusting balances of pivot and bad child based on bad grandchild
                         # if value inserted at badGrandChild
                         # then pivot balance = 0, bad child balance = 0
-                        ### WRITE YOUR CODE HERE ###
+                        if item == badGrandChild.item:
+                            root.setBalance(0)
+                            badChild.setBalance(0)
                         
                         # if inserted value smaller than bad grandchild (left subtree)
                         # then pivot balance = 0, bad child balance = 1
-                        ### WRITE YOUR CODE HERE ###
+                        elif item < badGrandChild.item:
+                            root.setBalance(0)
+                            badChild.setBalance(1)
                         
                         # if inserted value larger than bad grandchild (right subtree)
                         # then pivot balance = -1, bad child = 0
-                        ### WRITE YOUR CODE HERE ###
-            
+                        else:
+                            root.setBalance(-1)
+                            badChild.setBalance(0)
                         
             # check if inserting duplicated value
             else:
@@ -155,10 +235,20 @@ class AVLTree:
     def __lookup(node, item):
         # returns True if value is in tree and False otherwise
 
-        ### WRITE YOUR CODE HERE ###
+        if node == None:
+            return False
+        
+        # if reached node with lookup item - return true
+        if item == node.item:
+            return True
 
-        # returns True or False
-        return AVLTree.__lookup(node.left, item)
+        # if larger than node item - go right
+        if item > node.item:
+            return AVLTree.__lookup(node.right, item)
+
+        # if item smaller than node - go left
+        if item < node.item:
+            return AVLTree.__lookup(node.left, item)
 
     def __contains__(self, item):
         # checks if item is in the tree
