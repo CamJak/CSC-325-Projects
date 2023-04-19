@@ -234,7 +234,6 @@ class AVLTree:
 
     def __lookup(node, item):
         # returns True if value is in tree and False otherwise
-
         if node == None:
             return False
         
