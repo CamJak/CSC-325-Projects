@@ -87,12 +87,9 @@ class Heap:
             Output:
             - the node sifted down as far as necessary to maintain heap conditions
         '''
-        #print(f"sift from {fromIndex} to {last}")
         # repeat until node is in the right position
         # find index of a largest child
         child = self.__largestChild(fromIndex, last)
-        #print(self.data)
-        #print(f"child: {child}, last: {last}\n")
         # if index of the largest child is not found then finish
         if child == None:
             return 0
