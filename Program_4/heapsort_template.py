@@ -131,12 +131,10 @@ def main():
         
     print(f"Original list: {values}\n")
 
-    heapify = Heap()
-    for value in values:
-        heapify.addToHeap(value)
-    h = [x for x in heapify.data if x != None]
+    h = Heap()
+    h.buildFrom(values)
 
-    print(f"Heapified list: {h}\n")
+    print(f"Heapified list:\n{h}")
     
     sorted_list = Heap.sort(values)
     print(f"Sorted list: {sorted_list}")
