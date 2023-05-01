@@ -64,10 +64,20 @@ class Heap:
         '''
 
         # find indexes of left and right child of the current (index) node
+        leftChild = (2 * index) + 1
+        rightChild = (2 * index) + 2
         # return None if left child index is past last index
+        if leftChild > lastIndex:
+            return None
+        # return left if it is the last index
+        elif leftChild == lastIndex:
+            return leftChild
         # otherwise return the index of the largest child
-
-        ### WRITE YOUR CODE HERE###
+        else:
+            if self.data[leftChild] >= self.data[rightChild]:
+                return leftChild
+            elif self.data[rightChild] > self.data[leftChild]:
+                return rightChild
 
         
     def __siftDownFromTo(self, fromIndex, last):
@@ -77,13 +87,20 @@ class Heap:
             Output:
             - the node sifted down as far as necessary to maintain heap conditions
         '''
-        
+        #print(f"sift from {fromIndex} to {last}")
         # repeat until node is in the right position
-        #   find index of a largest child
-        #   if index of the largest child is not found then finish
-        #   otherwise, if value of the largest child is larger than parent then swap
-        
-        ### WRITE YOUR CODE HERE###
+        # find index of a largest child
+        child = self.__largestChild(fromIndex, last)
+        #print(self.data)
+        #print(f"child: {child}, last: {last}\n")
+        # if index of the largest child is not found then finish
+        if child == None:
+            return 0
+        # otherwise, if value of the largest child is larger than parent then swap
+        elif self.data[child] > self.data[fromIndex]:
+            self.data[child], self.data[fromIndex] = self.data[fromIndex], self.data[child]
+            self.__siftDownFromTo(child, last)
+
 
     def sort(seq):
         
@@ -114,9 +131,12 @@ def main():
         
     print(f"Original list: {values}\n")
 
-    ### WRITE YOUR CODE HERE###
+    heapify = Heap()
+    for value in values:
+        heapify.addToHeap(value)
+    h = [x for x in heapify.data if x != None]
 
-    print(f"Heapified list:\n{h}")
+    print(f"Heapified list: {h}\n")
     
     sorted_list = Heap.sort(values)
     print(f"Sorted list: {sorted_list}")
